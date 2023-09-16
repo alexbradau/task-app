@@ -1,6 +1,4 @@
-const mongodb = require('mongodb')
-const MongoClient = mongodb.MongoClient
-
+const {MongoClient, ObjectId} = require('mongodb')
 
 const connectionURL = 'mongodb+srv://alexbradau:d34dp00l@hvar.v9wlupn.mongodb.net/'
 const databaseName = 'task-manager'
@@ -53,4 +51,31 @@ async function run() {
 
 }
 
-run().catch(console.dir);
+async function get() {
+
+    try {
+
+        await client.connect();
+
+        const db = client.db(databaseName)
+
+        //const users = await db.collection('users').findOne({name:'Sosa'})
+        const tasks = await db.collection('tasks').find({completed:true})
+
+
+        //console.log(users)
+        for await (const doc of tasks) {
+
+            console.dir(doc.description);
+      
+          }
+    } finally {
+
+        await client.close();
+
+    }
+
+}
+
+//run().catch(console.dir);
+get().catch(console.dir);
