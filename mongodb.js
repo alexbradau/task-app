@@ -14,14 +14,36 @@ async function run() {
         await client.connect();
 
         const db = client.db(databaseName)
-        const result = await db.collection('users').insertOne({
-            name: 'Alex',
-            age: '27'
-        })
 
-        console.log(
-            `Document was inserted with the _id: ${result.insertedId}`,
-        );
+        const users = await db.collection('users').insertMany([
+            {
+                name: 'Sosa',
+                age: '300'
+            },
+            {
+                name: 'Sandman',
+                age: '28'
+            }
+        ])
+
+        const tasks = await db.collection('tasks').insertMany([
+            {
+                description: 'Finish node course',
+                completed: false
+            },
+            {
+                description: 'Smoke a spliff',
+                completed: true
+            },
+            {
+                description: 'Get a lineup',
+                completed: true
+            }
+        ])
+
+
+        console.log(users)
+        console.log(tasks)
 
     } finally {
 
