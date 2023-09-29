@@ -59,7 +59,6 @@ async function get() {
 
         const db = client.db(databaseName)
 
-        //const users = await db.collection('users').findOne({name:'Sosa'})
         const tasks = await db.collection('tasks').find({completed:true})
 
 
@@ -68,7 +67,7 @@ async function get() {
 
             console.dir(doc.description);
       
-          }
+        }
     } finally {
 
         await client.close();
@@ -77,5 +76,29 @@ async function get() {
 
 }
 
+async function update() {
+
+    try{
+        await client.connect()
+        const db = client.db(databaseName)
+        const updatePromise = db.collection('users').updateOne({
+            _id: new ObjectId('65061a4b2b5c933bf1537af9')
+        },{
+            $set: {
+                name: 'Sosa'
+            }
+    })
+        await updatePromise.then((result) => {
+            console.log(result)
+        }).catch((error) => 
+            console.log(error)
+     )
+
+    } finally{
+        await client.close()
+    }
+}
+
+update()
 //run().catch(console.dir);
-get().catch(console.dir);
+//get().catch(console.dir);
