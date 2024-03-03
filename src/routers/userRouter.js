@@ -82,7 +82,8 @@ router.post('/users/login', async (req,res) => {
         user.save()
         res.status(200).send({user, token})
     }catch(error){
-        res.status(500).send(error)
+        console.log(error)
+        res.status(500).send(error.message)
     }
 })
 
