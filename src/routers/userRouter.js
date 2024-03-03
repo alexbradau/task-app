@@ -11,7 +11,8 @@ router.post('/users', async (req, res) => {
         await user.save()
         res.status(201).send({user, token})
     } catch (error) {
-        res.status(400).send(error)
+        console.log(error)
+        res.status(400).send(error.message)
     }
 
 })
@@ -22,7 +23,8 @@ router.get('/users', async (req, res) => {
         const users = await User.find({})
         res.status(200).send(users)
     } catch (error) {
-        res.status(500).send(error)
+        console.log(error)
+        res.status(500).send(error.message)
     }
 })
 
@@ -33,7 +35,8 @@ router.get('/users/:id', async (req, res) => {
         if (!user) return res.status(404).send("User not found")
         res.status(200).send(user)
     } catch (error) {
-        res.status(500).send(error)
+        console.log(error)
+        res.status(500).send(error.message)
     }
 })
 
@@ -47,6 +50,7 @@ router.patch('/users/:id', async (req,res) => {
 
     try{
         const user = await User.findById(req.params.id)
+        if (!user) return res.status(404).send("User not found")
 
         updates.forEach((update) => {
             user[update] = req.body[update]
@@ -60,6 +64,7 @@ router.patch('/users/:id', async (req,res) => {
 
         res.status(200).send(user)
     }catch(error){
+        console.log(error)
         res.status(400).send(error)
     }
 })
