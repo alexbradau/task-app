@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 const router = new express.Router()
 const jwt = require('jsonwebtoken')
+const auth = require('../middleware/auth')
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
@@ -17,15 +18,8 @@ router.post('/users', async (req, res) => {
 
 })
 
-router.get('/users', async (req, res) => {
-
-    try {
-        const users = await User.find({})
-        res.status(200).send(users)
-    } catch (error) {
-        console.log(error)
-        res.status(500).send(error.message)
-    }
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 
 router.get('/users/:id', async (req, res) => {
@@ -89,6 +83,18 @@ router.post('/users/login', async (req,res) => {
     }catch(error){
         console.log(error)
         res.status(500).send(error.message)
+    }
+})
+
+router.post('/users/logout', async (req,res) => {
+    try{
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch(error){
+        console.log(error)
     }
 })
 
