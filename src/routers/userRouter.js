@@ -22,7 +22,7 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user)
 })
 
-router.patch('/users/:id', async (req,res) => {
+router.patch('/users/me', auth, async (req,res) => {
 
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']
@@ -31,23 +31,16 @@ router.patch('/users/:id', async (req,res) => {
     if(!validOperation) return res.status(400).send('Invalid update request!')
 
     try{
-        const user = await User.findById(req.params.id)
-        if (!user) return res.status(404).send("User not found")
-
+        const user = req.user
         updates.forEach((update) => {
             user[update] = req.body[update]
         })
 
         await user.save()
 
-        if(!user){
-            return res.status(404).send('User not found')
-        } 
-
         res.status(200).send(user)
     }catch(error){
-        console.log(error)
-        res.status(400).send(error)
+        res.status(500).send(error)
     }
 })
 
