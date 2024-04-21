@@ -95,6 +95,7 @@ router.post('/users/logout', auth, async (req,res) => {
         res.send(req.user.email + ' logged out successfully')
     } catch(error){
         console.log('Cannot log out user')
+        res.status(500).send()
     }
 })
 
@@ -104,6 +105,7 @@ router.post('/users/logoutAll', auth, async (req,res) => {
         await req.user.save()
         res.send(req.user.email + ' logged out of all sessions')
     } catch(error){
+        res.status(500).send()
         console.log('Cannot logout user from all sessions')
     }
 })
