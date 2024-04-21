@@ -98,4 +98,14 @@ router.post('/users/logout', auth, async (req,res) => {
     }
 })
 
+router.post('/users/logoutAll', auth, async (req,res) => {
+    try{
+        req.user.tokens = []
+        await req.user.save()
+        res.send(req.user.email + ' logged out of all sessions')
+    } catch(error){
+        console.log('Cannot logout user from all sessions')
+    }
+})
+
 module.exports = router
