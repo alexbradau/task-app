@@ -86,15 +86,15 @@ router.post('/users/login', async (req,res) => {
     }
 })
 
-router.post('/users/logout', async (req,res) => {
+router.post('/users/logout', auth, async (req,res) => {
     try{
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token
         })
         await req.user.save()
-        res.send()
+        res.send(req.user.email + ' logged out successfully')
     } catch(error){
-        console.log(error)
+        console.log('Cannot log out user')
     }
 })
 

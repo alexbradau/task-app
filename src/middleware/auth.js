@@ -8,9 +8,10 @@ const auth = async (req,res, next) => {
         const decoded = jwt.verify(token, 'thisisatestrun')
         const user = await User.findOne({_id: decoded._id, 'tokens.token': token})
         if(!user){
-            console.log
+            console.log('User not found')
             throw new Error('User not found')
         }
+        req.token = token
         req.user = user
     } catch(e){
         res.status(401).send({error: e.message, message: 'Please Authenticate'})
