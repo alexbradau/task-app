@@ -37,20 +37,19 @@ router.patch('/users/me', auth, async (req,res) => {
         })
 
         await user.save()
-
         res.status(200).send(user)
     }catch(error){
-        res.status(500).send(error)
+        console.log(error)
     }
 })
 
 router.delete('/users/me', auth, async (req,res) => {
     try{
-        const user = await User.findByIdAndDelete(req.user._id)
+        const user = await req.user.deleteOne()
         if(!user) return res.status(404).send('User not found')
         res.send(user)
     }catch(error){
-        res.status(500).send(error)
+        console.log(error)
     }
 })
 
