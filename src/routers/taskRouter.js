@@ -21,15 +21,21 @@ router.get('/tasks', auth, async (req, res) => {
     try {
         const limit = req.query.limit
         const skip = req.query.skip
-        for( var param in req.query){
-            if(param !== 'completed'){
+        const sortByStatus = req.query.sortByStatus;
+        for (var param in req.query) {
+            if (param !== 'completed') {
                 req.query[param] = null
             }
         }
-        const tasks = await Task.find({...req.query, owner: req.user.id}).limit(parseInt(limit) || 0).skip(parseInt(skip) || 0)
+        const tasks = await Task.find({ ...req.query, owner: req.user.id })
+            .limit(parseInt(limit) || 0)
+            .skip(parseInt(skip) || 0)
+            .sort({'completed' : sortByStatus} || null)
+
         res.status(200).send(tasks)
     } catch (e) {
         console.log(e)
+        res.status(500).send({'error': e.message})    
     }
 })
 
@@ -47,7 +53,7 @@ router.patch('/tasks/:id', auth, async (req, res) => {
 
     try {
         const updates = Object.keys(req.body)
-        const allowedUpdates = ['description', 'comleted']
+        const allowedUpdates = ['description', 'completed']
         const validOperation = updates.every(update => allowedUpdates.includes(update))
 
         if (!validOperation) return res.status(400).send('Invalid update request!')
