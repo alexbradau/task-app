@@ -22,6 +22,7 @@ router.get('/tasks', auth, async (req, res) => {
         const limit = req.query.limit
         const skip = req.query.skip
         const sortByStatus = req.query.sortByStatus;
+        const sortByCreated = req.query.sortByCreated;
         for (var param in req.query) {
             if (param !== 'completed') {
                 req.query[param] = null
@@ -31,6 +32,7 @@ router.get('/tasks', auth, async (req, res) => {
             .limit(parseInt(limit) || 0)
             .skip(parseInt(skip) || 0)
             .sort({'completed' : sortByStatus} || null)
+            .sort({'createdAt' : sortByCreated} || null)
 
         res.status(200).send(tasks)
     } catch (e) {
