@@ -77,6 +77,11 @@ userSchema.pre('save', async function (next) {
     next()
 
 })
+userSchema.virtual('tasks',{
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+})
 
 userSchema.methods.toJSON = function () {
     const user = this
