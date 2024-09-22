@@ -89,4 +89,25 @@ router.post('/users/logoutAll', auth, async (req,res) => {
     }
 })
 
+const multer = require('multer')
+const upload = multer({
+    dest: 'images',
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req, file, callback){
+        if(!file.originalname.match(/\.(png|jpg|jpeg)$/)){
+            return callback(new Error('File is not an image'))
+        }
+        callback(undefined, true)
+    }
+})
+
+router.post('/users/me/avatar', upload.single('avatar'), (req,res) => {
+        res.send()
+}, (error, req, res, next) => {
+    res.status(500).send({error: error.message})
+    console.log('File is not an image')
+})
+
 module.exports = router
